@@ -11,19 +11,59 @@ import About from "./About";
 import Missing from "./Missing";
 
 function App() {
+  //useNavigate use instantiation to navigate programmatically
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      title: "My First Post",
+      datetime: "June 25th, 2024 12:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
+    },
+    {
+      id: 2,
+      title: "My 2nd Post",
+      datetime: "June 25th, 2024 12:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
+    },
+    {
+      id: 3,
+      title: "My 3rd Post",
+      datetime: "June 25th, 2024 12:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
+    },
+    {
+      id: 4,
+      title: "My Fourth Post",
+      datetime: "June 25th, 2024 12:17:36 AM",
+      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
+    },
+  ]);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleDelete = (postId) => {
+    const postList = posts.filter((post) => post.id != postId);
+    setPosts(postList);
+    navigate("/");
+  };
+
   return (
-    <div>
-      <Header />
-      <Nav />
+    <div className="App">
+      <Header title="React JS Blog" />
+      <Nav search={search} setSearch={setSearch} />
       <Routes>
         {/* Base URL shows the Home component */}
-        <Route exact path="" element={<Home />} />
+        <Route exact path="" element={<Home posts={posts} />} />
 
         {/* /post URL shows the NewPost component */}
         <Route exact path="post" element={<NewPost />} />
 
         {/* /post/:id URL shows details of a specific post through the PostPage component */}
-        <Route path="post/:id" element={<PostPage />} />
+        <Route
+          path="post/:id"
+          element={<PostPage posts={posts} handleDelete={handleDelete} />}
+        />
 
         {/* /about URL shows the About component */}
         <Route path="about" element={<About />} />
