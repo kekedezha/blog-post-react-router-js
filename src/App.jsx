@@ -46,18 +46,22 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
+    // Filter results to include posts that include the search term in the body or title
     const filteredResults = posts.filter(
       (post) =>
         post.body.toLowerCase().includes(search.toLowerCase()) ||
         post.title.toLowerCase().includes(search.toLowerCase())
     );
 
+    //Set the Search Results which is what will be displayed in the Home component and show them in order from latest post to oldest post
     setSearchResults(filteredResults.reverse());
   }, [posts, search]);
 
   const handleDelete = (postId) => {
+    //Filter out post that is to be deleted
     const postList = posts.filter((post) => post.id != postId);
     setPosts(postList);
+    //once post has been removed then head back to home screen/url
     navigate("/");
   };
 
