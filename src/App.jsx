@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import api from "./api/posts";
 
 import Header from "./Header";
 import Nav from "./Nav";
@@ -19,6 +20,26 @@ function App() {
   const [postBody, setPostBody] = useState("");
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get("/posts");
+        setPosts(response.data);
+      } catch (err) {
+        if (err.response) {
+          // if not in 200 response range
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     // Filter results to include posts that include the search term in the body or title
@@ -40,7 +61,7 @@ function App() {
     navigate("/");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
     const datetime = format(new Date(), "MMMM dd, yyyy pp");
@@ -51,11 +72,16 @@ function App() {
       body: postBody,
     };
 
-    const newPostsState = [...posts, newPost];
-    setPosts(newPostsState);
-    setPostTitle("");
-    setPostBody("");
-    navigate("/");
+    try {
+      const response = await api.post("/posts", newPost);
+      const newPostsState = [...posts, response.data];
+      setPosts(newPostsState);
+      setPostTitle("");
+      setPostBody("");
+      navigate("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
   };
 
   return (
