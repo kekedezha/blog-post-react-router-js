@@ -10,8 +10,11 @@ const useWindowSize = () => {
   useEffect(() => {
     // Set the size of the window to the state variable
     const handleResize = () => {
+      console.log(window.innerHeight);
+      console.log(typeof window.innerWidth);
+
       setWindowSize({
-        window: window.innerWidth,
+        width: window.innerWidth,
         height: window.innerHeight,
       });
     };

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import api from "./api/posts";
+import useWindowSize from "./hooks/useWindowSize";
 
 import Header from "./Header";
 import Nav from "./Nav";
@@ -23,6 +24,7 @@ function App() {
   const [editBody, setEditBody] = useState("");
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const { width } = useWindowSize();
 
   //useEffect used for CRUD operation READ, to READ posts from json server
   useEffect(() => {
@@ -121,7 +123,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header title="React JS Blog" />
+      <Header title="React JS Blog" width={width} />
       <Nav search={search} setSearch={setSearch} />
       <Routes>
         {/* Base URL shows the Home component */}
