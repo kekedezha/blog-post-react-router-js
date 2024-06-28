@@ -27,12 +27,8 @@ const useWindowSize = () => {
 
     // Clean up function to be called to prevent memory leaks
     // Will get rid of the window event listener to stop listening for the resize event
-    const cleanUp = () => {
-      console.log("Runs if a useEffect dep changes");
-      window.removeEventListener("resize", handleResize);
-    };
 
-    return cleanUp;
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return windowSize;
