@@ -11,6 +11,7 @@ import NewPost from "./NewPost";
 import PostPage from "./PostPage";
 import About from "./About";
 import Missing from "./Missing";
+import EditPost from "./EditPost";
 
 function App() {
   //useNavigate use instantiation to navigate programmatically
@@ -18,9 +19,12 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  //useEffect used for CRUD operation READ, to READ posts from json server
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -41,6 +45,7 @@ function App() {
     fetchPosts();
   }, []);
 
+  //useEffect used to search results from all posts
   useEffect(() => {
     // Filter results to include posts that include the search term in the body or title
     const filteredResults = posts.filter(
@@ -53,14 +58,44 @@ function App() {
     setSearchResults(filteredResults.reverse());
   }, [posts, search]);
 
-  const handleDelete = (postId) => {
-    //Filter out post that is to be deleted
-    const postList = posts.filter((post) => post.id != postId);
-    setPosts(postList);
-    //once post has been removed then head back to home screen/url
-    navigate("/");
+  const handleUpdate = async (postId) => {
+    const datetime = format(new Date(), "MMMM dd, yyyy pp");
+    const postUpdates = {
+      postId,
+      title: editTitle,
+      datetime,
+      body: editBody,
+    };
+    try {
+      //use axios' PUT call to updated entire post. PATCH would have been used if we were only updating certain fields
+      const response = await api.put(`/posts/${postId}`, postUpdates);
+      //Use map to return a new array with only the 'updated post' updated in the array
+      setPosts(
+        posts.map((post) => (post.id === postId ? { ...response.data } : post))
+      );
+      setPostTitle("");
+      setPostBody("");
+      navigate("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
   };
 
+  //CRUD operation DELETE
+  const handleDelete = async (postId) => {
+    try {
+      await api.delete(`/posts/${postId}`);
+      //Filter out post that is to be deleted
+      const postList = posts.filter((post) => post.id != postId);
+      setPosts(postList);
+      //once post has been removed then head back to home screen/url
+      navigate("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  };
+
+  //CRUD operation CREATE
   const handleSubmit = async (e) => {
     e.preventDefault();
     const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
@@ -103,6 +138,21 @@ function App() {
               setPostTitle={setPostTitle}
               postBody={postBody}
               setPostBody={setPostBody}
+            />
+          }
+        />
+
+        {/* /post URL shows the NewPost component */}
+        <Route
+          path="edit/:id"
+          element={
+            <EditPost
+              posts={posts}
+              handleEdit={handleUpdate}
+              editTitle={editTitle}
+              setEditTitle={setEditTitle}
+              editBody={editBody}
+              setEditBody={setEditBody}
             />
           }
         />
