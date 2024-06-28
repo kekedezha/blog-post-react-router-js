@@ -1,34 +1,29 @@
 {
   "posts": [
     {
-      "id": 1,
+      "id": "1",
       "title": "My First Post",
       "datetime": "June 25th, 2024 12:17:36 AM",
       "body": "Hey check out my first post!"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "My 2nd Post",
       "datetime": "June 25th, 2024 12:17:36 AM",
       "body": "Testing testing..."
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "My 3rd Post",
       "datetime": "June 25th, 2024 12:17:36 AM",
       "body": "Oh my gosh this actually works"
     },
     {
-      "id": 4,
-      "title": "My Fourth Post",
-      "datetime": "June 25th, 2024 12:17:36 AM",
-      "body": "Do not open this...."
-    },
-    {
-      "id": 5,
-      "title": "Test Post",
-      "datetime": "June 27, 2024 11:16:58 AM",
-      "body": "Testing the add new post with axios and json server. Hope this works."
+      "postId": "4",
+      "title": "My 4th Post",
+      "datetime": "June 28, 2024 12:15:07 PM",
+      "body": "Do not open this....please.",
+      "id": "4"
     }
   ]
 }
