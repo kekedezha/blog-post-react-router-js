@@ -1,9 +1,27 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import DataContext from "./context/DataContext";
+import api from "./api/posts";
 
-const PostPage = ({ posts, handleDelete }) => {
+const PostPage = () => {
+  const navigate = useNavigate();
+  const { posts, setPosts } = useContext(DataContext);
   const { id } = useParams();
   const post = posts.find((post) => post.id.toString() === id);
 
+  //CRUD operation DELETE
+  const handleDelete = async (postId) => {
+    try {
+      await api.delete(`/posts/${postId}`);
+      //Filter out post that is to be deleted
+      const postList = posts.filter((post) => post.id != postId);
+      setPosts(postList);
+      //once post has been removed then head back to home screen/url
+      navigate("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  };
   return (
     <main className="PostPage">
       <article className="post">

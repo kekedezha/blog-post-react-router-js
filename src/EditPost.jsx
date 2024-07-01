@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useEffect, useContext, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import DataContext from "./context/DataContext";
+import { format } from "date-fns";
+import api from "./api/posts";
 
-const EditPost = ({
-  posts,
-  handleEdit,
-  editTitle,
-  setEditTitle,
-  editBody,
-  setEditBody,
-}) => {
+const EditPost = () => {
+  const navigate = useNavigate();
+  const { posts, setPosts } = useContext(DataContext);
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
   const { id } = useParams();
   const post = posts.find((post) => post.id.toString() === id);
 
@@ -18,6 +18,29 @@ const EditPost = ({
       setEditBody(post.body);
     }
   }, [post, setEditTitle, setEditBody]);
+
+  const handleUpdate = async (postId) => {
+    const datetime = format(new Date(), "MMMM dd, yyyy pp");
+    const postUpdates = {
+      postId,
+      title: editTitle,
+      datetime,
+      body: editBody,
+    };
+    try {
+      //use axios' PUT call to updated entire post. PATCH would have been used if we were only updating certain fields
+      const response = await api.put(`/posts/${postId}`, postUpdates);
+      //Use map to return a new array with only the 'updated post' updated in the array
+      setPosts(
+        posts.map((post) => (post.id === postId ? { ...response.data } : post))
+      );
+      setEditTitle("");
+      setEditBody("");
+      navigate("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  };
 
   return (
     <main className="NewPost">
@@ -40,7 +63,7 @@ const EditPost = ({
               value={editBody}
               onChange={(e) => setEditBody(e.target.value)}
             />
-            <button type="submit" onClick={() => handleEdit(post.id)}>
+            <button type="submit" onClick={() => handleUpdate(post.id)}>
               Submit
             </button>
           </form>

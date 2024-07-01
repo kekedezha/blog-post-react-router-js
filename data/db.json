@@ -24,6 +24,12 @@
       "datetime": "June 28, 2024 12:15:07 PM",
       "body": "Do not open this....please.",
       "id": "4"
+    },
+    {
+      "id": "41",
+      "title": "Post 6",
+      "datetime": "July 01, 2024 5:32:02 PM",
+      "body": "Testing new post using useContent"
     }
   ]
 }
