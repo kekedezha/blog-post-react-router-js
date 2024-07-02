@@ -1,35 +1,10 @@
 {
   "posts": [
     {
-      "id": "1",
-      "title": "My First Post",
-      "datetime": "June 25th, 2024 12:17:36 AM",
-      "body": "Hey check out my first post!"
-    },
-    {
-      "id": "2",
-      "title": "My 2nd Post",
-      "datetime": "June 25th, 2024 12:17:36 AM",
-      "body": "Testing testing..."
-    },
-    {
-      "id": "3",
-      "title": "My 3rd Post",
-      "datetime": "June 25th, 2024 12:17:36 AM",
-      "body": "Oh my gosh this actually works"
-    },
-    {
-      "postId": "4",
-      "title": "My 4th Post",
-      "datetime": "June 28, 2024 12:15:07 PM",
-      "body": "Do not open this....please.",
-      "id": "4"
-    },
-    {
-      "id": "41",
-      "title": "Post 6",
-      "datetime": "July 01, 2024 5:32:02 PM",
-      "body": "Testing new post using useContent"
+      "id": "4",
+      "title": "My 1st Post",
+      "datetime": "July 02, 2024 5:56:10 PM",
+      "body": "Do not open this....please."
     }
   ]
 }

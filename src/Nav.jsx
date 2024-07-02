@@ -1,9 +1,28 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import DataContext from "./context/DataContext";
+import { useEffect } from "react";
+import { useStoreState, useStoreActions } from "easy-peasy";
 
 const Nav = () => {
-  const { search, setSearch } = useContext(DataContext);
+  const posts = useStoreState((state) => state.posts);
+  const search = useStoreState((state) => state.search);
+  const setSearch = useStoreActions((actions) => actions.setSearch);
+  const setSearchResults = useStoreActions(
+    (actions) => actions.setSearchResults
+  );
+
+  //useEffect used to search results from all posts
+  useEffect(() => {
+    // Filter results to include posts that include the search term in the body or title
+    const filteredResults = posts.filter(
+      (post) =>
+        post.body.toLowerCase().includes(search.toLowerCase()) ||
+        post.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    //Set the Search Results which is what will be displayed in the Home component and show them in order from latest post to oldest post
+    setSearchResults(filteredResults.reverse());
+  }, [posts, search, setSearchResults]);
+
   return (
     <nav className="Nav">
       <form className="searchForm" onSubmit={(e) => e.preventDefault()}>

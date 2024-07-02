@@ -1,16 +1,21 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import DataContext from "./context/DataContext";
 import { format } from "date-fns";
-import api from "./api/posts";
+import { useStoreState, useStoreActions } from "easy-peasy";
 
 const EditPost = () => {
   const navigate = useNavigate();
-  const { posts, setPosts } = useContext(DataContext);
-  const [editTitle, setEditTitle] = useState("");
-  const [editBody, setEditBody] = useState("");
   const { id } = useParams();
-  const post = posts.find((post) => post.id.toString() === id);
+
+  const editPost = useStoreActions((actions) => actions.editPost);
+  const setEditTitle = useStoreActions((actions) => actions.setEditTitle);
+  const setEditBody = useStoreActions((actions) => actions.setEditBody);
+
+  const editTitle = useStoreState((state) => state.editTitle);
+  const editBody = useStoreState((state) => state.editBody);
+
+  const getPostById = useStoreState((state) => state.getPostById);
+  const post = getPostById(id);
 
   useEffect(() => {
     if (post) {
@@ -19,27 +24,16 @@ const EditPost = () => {
     }
   }, [post, setEditTitle, setEditBody]);
 
-  const handleUpdate = async (postId) => {
+  const handleUpdate = (postId) => {
     const datetime = format(new Date(), "MMMM dd, yyyy pp");
     const postUpdates = {
-      postId,
+      id: postId,
       title: editTitle,
       datetime,
       body: editBody,
     };
-    try {
-      //use axios' PUT call to updated entire post. PATCH would have been used if we were only updating certain fields
-      const response = await api.put(`/posts/${postId}`, postUpdates);
-      //Use map to return a new array with only the 'updated post' updated in the array
-      setPosts(
-        posts.map((post) => (post.id === postId ? { ...response.data } : post))
-      );
-      setEditTitle("");
-      setEditBody("");
-      navigate("/");
-    } catch (err) {
-      console.log(`Error: ${err.message}`);
-    }
+    editPost(postUpdates);
+    navigate(`/post/${postId}`);
   };
 
   return (
@@ -63,7 +57,7 @@ const EditPost = () => {
               value={editBody}
               onChange={(e) => setEditBody(e.target.value)}
             />
-            <button type="submit" onClick={() => handleUpdate(post.id)}>
+            <button type="button" onClick={() => handleUpdate(post.id)}>
               Submit
             </button>
           </form>
